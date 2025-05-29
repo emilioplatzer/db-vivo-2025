@@ -1,0 +1,10 @@
+{
+    "db": {
+        "user": "inscriptos_user",
+        "password": "cambiar_esta_clave",
+        "host": "localhost",
+        "port": 5432,
+        "database": "inscriptos",
+        "ssl": false
+    }
+}
