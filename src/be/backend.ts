@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 
 // Rutas
-app.use('/', function(_req, res){
+app.get('/', function(_req, res){
     res.send(`
         <h1>Sistema de Inscripciones</h1>
         <p>Menú</p>
@@ -20,18 +20,51 @@ app.use('/', function(_req, res){
     `)
 })
 
+var connOptions = JSON.parse(await fs.readFile('local-config.json','utf-8')) as {db:ClientConfig}
+
+async function usarBaseDeDatos(){
+    const client = new Client(connOptions.db);
+    await client.connect();
+    await client.query('set search_path = insc;')
+    return client;
+}
+
+app.get('/materias', async function(_req, res){
+    var client = await usarBaseDeDatos();
+    var result = await client.query(`
+        select mat, nombre, area, horas
+            from materias
+            order by mat
+    `)
+    res.end(`<h1>Materias</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>mat</th>
+                    <th>nombre</th>
+                    <th>area</th>
+                    <th>horas</th>
+                </tr>
+            </thead>
+            <tbody>
+            ${result.rows.map(row => `
+                <tr>
+                    <td>${row.mat}</td>
+                    <td>${row.nombre}</td>
+                    <td>${row.area}</td>
+                    <td>${row.horas}</td>
+                </tr>
+            `).join('')}
+            </tbody>
+        </table>
+    `);
+})
+
 const PORT = 3000;
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
 
-var connOptions = JSON.parse(await fs.readFile('local-config.json','utf-8')) as {db:ClientConfig}
-
-const client = new Client(connOptions.db);
-
-await client.connect();
-
-await client.query('set search_path = insc;')
 
 // migrarAlumnos('./examples/alumnos.csv', client)
