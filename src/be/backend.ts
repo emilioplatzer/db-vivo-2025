@@ -11,7 +11,13 @@ app.use(express.json());
 
 // Rutas
 app.use('/', function(_req, res){
-    res.send("<h1>Sistema de Inscripciones</h1>en preparación")
+    res.send(`
+        <h1>Sistema de Inscripciones</h1>
+        <p>Menú</p>
+        <ul>
+            <li><a href='./materias'>Materias</li>
+        </ul>
+    `)
 })
 
 const PORT = 3000;
@@ -28,4 +34,4 @@ await client.connect();
 
 await client.query('set search_path = insc;')
 
-migrarAlumnos('./examples/alumnos.csv', client)
+// migrarAlumnos('./examples/alumnos.csv', client)
