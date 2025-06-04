@@ -31,6 +31,7 @@ app.get('/', function(_req, res){
         <p>Menú</p>
         <ul>
             <li><a href='./materias'>Materias</li>
+            <li><a href='./materia/agregar'>Agregar Materia</li>
         </ul>
     `))
 })
@@ -71,6 +72,20 @@ app.get('/materias', async function(_req, res){
                 </tr>
             `).join('')}
             </tbody>
+        </table>
+    `));
+})
+
+app.get('/materia/agregar', async function(_req, res){
+    res.end(ssPage(`<h1>Agregar Materia</h1>
+        <table>
+            <tr>
+                <tr><td>mat    </td>  <td><input name=mat    ></td>    </tr>
+                <tr><td>nombre </td>  <td><input name=nombre ></td>    </tr>
+                <tr><td>area   </td>  <td><input name=area   ></td>    </tr>
+                <tr><td>horas  </td>  <td><input name=horas  ></td>    </tr>
+                <tr><td colspan=2><input type=submit name=agregar></td></tr>
+            </tr>
         </table>
     `));
 })
