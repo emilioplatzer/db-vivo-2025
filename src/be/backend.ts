@@ -9,15 +9,30 @@ const app = express();
 // Middleware para parsear JSON
 app.use(express.json());
 
+function ssPage(content:string){
+    return `<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+* {font-family: Monoto, Bokoto, Arial}
+        </style>
+    </head>
+    <body>
+${content}
+    </body>
+</html>`
+}
+
 // Rutas
 app.get('/', function(_req, res){
-    res.send(`
+    res.send(ssPage(`
         <h1>Sistema de Inscripciones</h1>
         <p>Menú</p>
         <ul>
             <li><a href='./materias'>Materias</li>
         </ul>
-    `)
+    `))
 })
 
 var connOptions = JSON.parse(await fs.readFile('local-config.json','utf-8')) as {db:ClientConfig}
@@ -36,7 +51,7 @@ app.get('/materias', async function(_req, res){
             from materias
             order by mat
     `)
-    res.end(`<h1>Materias</h1>
+    res.end(ssPage(`<h1>Materias</h1>
         <table>
             <thead>
                 <tr>
@@ -57,7 +72,7 @@ app.get('/materias', async function(_req, res){
             `).join('')}
             </tbody>
         </table>
-    `);
+    `));
 })
 
 const PORT = 3000;
