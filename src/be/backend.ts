@@ -95,12 +95,12 @@ app.get('/materia/agregar', async function(_req, res){
 })
 
 app.post('/materia/agregar', async function(req, res){
-    console.log('por acá pasé', req.query);
     var client = await usarBaseDeDatos();
     var result = await client.query(`
         insert into materias (mat, nombre, area, horas)
-            values ('${req.body.mat}','${req.body.nombre}','${req.body.area}','${req.body.horas}') returning mat
-    `);
+            values ($1, $2, $3, $4) returning mat`,
+            [req.body.mat, req.body.nombre, req.body.area, req.body.horas]
+    );
     res.end(ssPage(`
         <p>Se agregó con éxito la materia ${result.rows[0].mat}</p>
         <a href=/>volver</a>
