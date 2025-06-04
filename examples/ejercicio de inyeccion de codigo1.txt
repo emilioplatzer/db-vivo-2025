@@ -1,0 +1,8 @@
+esto está y por lo tanto tengo que adaptarme. 
+insert into materias (mat, nombre, area, horas) values ('
+qué le agrego
+xx1', 'xx1', 'Sistemas', '9') returning mat; --
+
+xx2', 'xx2', 'Sistemas', '9') returning current_user; --
+
+xx4', 'xx4', 'Sistemas', '9') returning current_user as mat; --
