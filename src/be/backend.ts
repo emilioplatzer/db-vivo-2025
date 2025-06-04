@@ -2,12 +2,14 @@ import express from "express";
 import { Client, ClientConfig } from "pg";
 import {promises as fs} from "fs";
 
+
 import {migrarAlumnos} from "./migrar-alumnos.js"
 
 const app = express();
 
 // Middleware para parsear JSON
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 function ssPage(content:string){
     return `<!doctype html>
@@ -78,6 +80,7 @@ app.get('/materias', async function(_req, res){
 
 app.get('/materia/agregar', async function(_req, res){
     res.end(ssPage(`<h1>Agregar Materia</h1>
+        <form method=post>
         <table>
             <tr>
                 <tr><td>mat    </td>  <td><input name=mat    ></td>    </tr>
@@ -87,8 +90,27 @@ app.get('/materia/agregar', async function(_req, res){
                 <tr><td colspan=2><input type=submit name=agregar></td></tr>
             </tr>
         </table>
+        </form>
     `));
 })
+
+app.post('/materia/agregar', async function(req, res){
+    console.log('por acá pasé', req.query);
+    var client = await usarBaseDeDatos();
+    var result = await client.query(`
+        insert into materias (mat, nombre, area, horas)
+            values (
+            '${req.body.mat}',
+            '${req.body.nombre}',
+            '${req.body.area}',
+            '${req.body.horas}')
+            returning mat
+    `);
+    res.end(ssPage(`
+        <p>Se agregó con éxito la materia ${result.rows[0].mat}</p>
+        <a href=/>volver</a>
+    `))
+});
 
 const PORT = 3000;
 
