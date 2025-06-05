@@ -4,8 +4,10 @@ import {migrarAlumnos} from "./migrar-alumnos.js"
 import { crearEndpointsDeTabla } from "./endpoints-tabla.js";
 import { materiasDef } from "./metadatos-materias.js";
 import { ssPage } from "./html.js";
-import { usarBaseDeDatos } from "./base-de-datos.js";
+import { exportarEstructuraSql, usarBaseDeDatos } from "./base-de-datos.js";
 import { alumnosDef } from "./metadatos-alumnos.js";
+
+const MODO_DEVELOPER = true
 
 const app = express();
 
@@ -27,8 +29,17 @@ app.get('/', function(_req, res){
     `))
 })
 
-crearEndpointsDeTabla(app, materiasDef);
-crearEndpointsDeTabla(app, alumnosDef);
+const tablas = [
+    materiasDef,
+    alumnosDef,
+]
+
+for (var metadatos of tablas) {
+    crearEndpointsDeTabla(app, metadatos);
+    if (MODO_DEVELOPER) {
+        await exportarEstructuraSql(metadatos);
+    }
+}
 
 const PORT = 3000;
 
