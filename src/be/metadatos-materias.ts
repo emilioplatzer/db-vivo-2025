@@ -1,3 +1,5 @@
+import { MetadatosTabla } from "./tipos.js";
+
 export const materiasDef = {
     tabla: 'materias',
     campos: {
@@ -8,7 +10,5 @@ export const materiasDef = {
     },
     primaryKey: 'mat',
     singular: 'materia',
-    pronombreSingular: 'la'
-}
-
-export type MetadatosTabla = typeof materiasDef;
+    articuloSingular: 'la'
+} satisfies MetadatosTabla

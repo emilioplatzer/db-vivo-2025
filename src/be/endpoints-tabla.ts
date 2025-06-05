@@ -1,6 +1,6 @@
 import {Express} from "express";
 
-import {MetadatosTabla} from "./metadatos-materias.js";
+import { MetadatosTabla } from "./tipos.js";
 import { usarBaseDeDatos } from "./base-de-datos.js";
 import { ssPage } from "./html.js";
 
@@ -49,7 +49,7 @@ export function crearEndpointsDeTabla(app: Express, metadatos: MetadatosTabla){
                 Object.keys(metadatos.campos).map(campo => req.body[campo])
         );
         res.end(ssPage(`
-            <p>Se agregó con éxito ${metadatos.pronombreSingular} ${metadatos.singular} ${result.rows[0][metadatos.primaryKey]}</p>
+            <p>Se agregó con éxito ${metadatos.articuloSingular} ${metadatos.singular} ${result.rows[0][metadatos.primaryKey]}</p>
             <a href=/>volver</a>
         `))
     });

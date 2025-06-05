@@ -5,6 +5,7 @@ import { crearEndpointsDeTabla } from "./endpoints-tabla.js";
 import { materiasDef } from "./metadatos-materias.js";
 import { ssPage } from "./html.js";
 import { usarBaseDeDatos } from "./base-de-datos.js";
+import { alumnosDef } from "./metadatos-alumnos.js";
 
 const app = express();
 
@@ -20,11 +21,14 @@ app.get('/', function(_req, res){
         <ul>
             <li><a href='./materias'>Materias</li>
             <li><a href='./materia/agregar'>Agregar Materia</li>
+            <li><a href='./alumnos'>Alumnos</li>
+            <li><a href='./alumno/agregar'>Agregar Alumno</li>
         </ul>
     `))
 })
 
 crearEndpointsDeTabla(app, materiasDef);
+crearEndpointsDeTabla(app, alumnosDef);
 
 const PORT = 3000;
 
