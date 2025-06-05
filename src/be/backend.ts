@@ -26,35 +26,6 @@ app.get('/', function(_req, res){
 
 crearEndpointsDeTabla(app, materiasDef);
 
-app.get('/materia/agregar', async function(_req, res){
-    res.end(ssPage(`<h1>Agregar Materia</h1>
-        <form method=post>
-        <table>
-            <tr>
-                <tr><td>mat    </td>  <td><input name=mat    ></td>    </tr>
-                <tr><td>nombre </td>  <td><input name=nombre ></td>    </tr>
-                <tr><td>area   </td>  <td><input name=area   ></td>    </tr>
-                <tr><td>horas  </td>  <td><input name=horas  ></td>    </tr>
-                <tr><td colspan=2><input type=submit name=agregar></td></tr>
-            </tr>
-        </table>
-        </form>
-    `));
-})
-
-app.post('/materia/agregar', async function(req, res){
-    var client = await usarBaseDeDatos();
-    var result = await client.query(`
-        insert into materias (mat, nombre, area, horas)
-            values ($1, $2, $3, $4) returning mat`,
-            [req.body.mat, req.body.nombre, req.body.area, req.body.horas]
-    );
-    res.end(ssPage(`
-        <p>Se agregó con éxito la materia ${result.rows[0].mat}</p>
-        <a href=/>volver</a>
-    `))
-});
-
 const PORT = 3000;
 
 app.listen(PORT, () => {

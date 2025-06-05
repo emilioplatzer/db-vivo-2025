@@ -6,7 +6,9 @@ export const materiasDef = {
         area       : {tipo: 'text'},
         horas      : {tipo: 'integer'},
     },
-    primaryKey: 'mat'
+    primaryKey: 'mat',
+    singular: 'materia',
+    pronombreSingular: 'la'
 }
 
 export type MetadatosTabla = typeof materiasDef;

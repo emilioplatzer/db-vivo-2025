@@ -10,7 +10,7 @@ export function crearEndpointsDeTabla(app: Express, metadatos: MetadatosTabla){
         var result = await client.query(`
             select ${Object.keys(metadatos.campos).join(', ')}
                 from ${metadatos.tabla}
-                order by mat
+                order by ${metadatos.primaryKey}
         `)
         res.end(ssPage(`<h1>${metadatos.tabla}</h1>
             <table>
@@ -29,4 +29,29 @@ export function crearEndpointsDeTabla(app: Express, metadatos: MetadatosTabla){
             </table>
         `));
     })
+    app.get(`/${metadatos.singular}/agregar`, async function(_req, res){
+        res.end(ssPage(`<h1>Agregar ${metadatos.singular}</h1>
+            <form method=post>
+            <table>
+                ${Object.keys(metadatos.campos).map(campo => `
+                    <tr><td>${campo}</td><td><input name=${campo}></td></tr>
+                `).join('\n')}
+                <tr><td colspan=2><input type=submit name=agregar></td></tr>
+            </table>
+            </form>
+        `));
+    })
+    app.post(`/${metadatos.singular}/agregar`, async function(req, res){
+        var client = await usarBaseDeDatos();
+        var result = await client.query(`
+            insert into ${metadatos.tabla} (${Object.keys(metadatos.campos).join(', ')})
+                values (${Object.keys(metadatos.campos).map((_, i)=>`\$${i+1}`).join(', ')}) returning ${metadatos.primaryKey}`,
+                Object.keys(metadatos.campos).map(campo => req.body[campo])
+        );
+        res.end(ssPage(`
+            <p>Se agregó con éxito ${metadatos.pronombreSingular} ${metadatos.singular} ${result.rows[0][metadatos.primaryKey]}</p>
+            <a href=/>volver</a>
+        `))
+    });
+
 }
